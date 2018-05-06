@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
 	char *homePath, *completePath;	
 
 	if(argc == 1) { 
-		printf("No input files found.\n"); 
+		printf("\nNo input files found.\n\n"); 
 		return 1;
 	}
 	
