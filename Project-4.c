@@ -31,7 +31,10 @@ int main(int argc, char **argv) {
 	struct passwd *pwd;
 	char *homePath, *completePath;	
 
-	if(argc == 1) { printf("No input files found.\n"); }
+	if(argc == 1) { 
+		printf("No input files found.\n"); 
+		return 1;
+	}
 	
 	else {
 
