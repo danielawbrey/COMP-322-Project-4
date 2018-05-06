@@ -19,6 +19,7 @@ char* getBaseName(const char*);
 char* getPathName(const char*);
 bool pathIsRelative(const char*);
 void print(const char*, struct stat);
+char* getFullPath(char*);
 
 #define true 1
 #define false 0
@@ -40,17 +41,7 @@ int main(int argc, char **argv) {
 	
 			if(isDir(argv[k]) && pathIsRelative(argv[k])) {
 
-				pwd = getpwuid(getuid());
-
-				homePath = pwd->pw_dir;
-
-				strcat(homePath, "/");	
-
-				strcat(homePath, argv[k]);
-				
-				completePath = homePath; // strcat concatenates strings into first parameter so reassignment is done for clarity.
-
-				argv[k] = completePath;
+				argv[k] = getFullPath(argv[k]);
 			}			
 
 			if(stat(argv[k], &buf) == -1) {
@@ -96,6 +87,21 @@ char* getPathName(const char* target) {
 	char* dirc = strdup(target);
 	char* dname = dirname(dirc);
 	return dname;
+}
+
+char* getFullPath(char* target) {
+
+	char *filePath, *homePath, *completePath;
+
+	homePath = getenv("HOME");
+
+	strcat(homePath, "/");				
+
+	strcat(homePath, target);
+				
+	completePath = homePath; // strcat concatenates strings into first parameter so reassignment is done for clarity.
+
+	return completePath;
 }
 
 bool pathIsRelative(const char* target) {
