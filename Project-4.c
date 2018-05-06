@@ -82,7 +82,6 @@ bool isFile(const char* target) {
 char* getBaseName(const char* target) {
 	char* basec = strdup(target);
 	char* bname = basename(basec);
-	strcat(bname, "\0");
 	return bname;
 }
 
@@ -137,16 +136,24 @@ void print(const char* path, struct stat buf) {
 		printf( (buf.st_mode & S_IRUSR) ? "r" : "-");
 		printf( (buf.st_mode & S_IWUSR) ? "w" : "-");
 		printf( (buf.st_mode & S_IXUSR) ? "x" : "-");
+	}
 
+	if(pwd->pw_gid == buf.st_gid) {
 		printf( (buf.st_mode & S_IRGRP) ? "r" : "-");
 		printf( (buf.st_mode & S_IWGRP) ? "w" : "-");
 		printf( (buf.st_mode & S_IXGRP) ? "x" : "-");
-		
-		printf( (buf.st_mode & S_IROTH) ? "r" : "-");				
-		printf( (buf.st_mode & S_IWOTH) ? "w" : "-");
-		printf( (buf.st_mode & S_IXOTH) ? "x" : "-");
-		printf("\n");
 	}
+
+	while ((direntPtr = readdir(dirPtr)) != NULL) {
+
+		if(strcmp(direntPtr->d_name, getBaseName(path))) {
+			printf( (buf.st_mode & S_IROTH) ? "r" : "-");				
+			printf( (buf.st_mode & S_IWOTH) ? "w" : "-");
+			printf( (buf.st_mode & S_IXOTH) ? "x" : "-");
+			printf("\n");
+			break;
+		}
+	} 
 
 	printf ("Number of links: %lu \n",buf.st_nlink);
 
